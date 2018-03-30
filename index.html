@@ -1,0 +1,194 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/css/zenburn.min.css" />
+  </head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h2>SLD visualization</h2>
+          technological choices
+        </section>
+				<section>
+          <h2>Requirements</h2>
+          <ul>
+            <li class="fragment">'Specific' per plant</li>
+            <li class="fragment">
+              Tweaking by operational people
+              <br>(no 100% mapping to data in neo4j)
+            </li>
+            <li class="fragment">Mix of graphical and textual data</li>
+            <li class="fragment">Interactivity</li>
+          </ul>
+        </section>
+        <section>
+          <section>
+            <h2>Browser technologies</h2>
+            <ul>
+              <li class="fragment">HTML</li>
+              <li class="fragment">Canvas</li>
+              <li class="fragment">SVG</li>
+            </ul>
+          </section>
+          <section>
+            <h3>HTML</h3>
+            <ul>
+              <li class="fragment">High developper adoption</li>
+              <li class="fragment">VueJS compatible</li>
+              <li class="fragment">Good text layouting/interaction support</li>
+              <li class="fragment">CSS knowledge required</li>
+              <li class="fragment">No standard tools for graphical editing</li>
+              <li class="fragment">No standard to store graphical information</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Canvas</h3>
+            <ul>
+              <li class="fragment">Not 'scalable'</li>
+              <li class="fragment">VueJS integration not trivial</li>
+              <li class="fragment">Few specific text layout/interactivity support</li>
+              <li class="fragment">No standard tools for graphical editing</li>
+              <li class="fragment">No standard to store graphical information</li>
+            </ul>
+          </section>
+          <section>
+            <h3>SVG</h3>
+            <ul>
+              <li class="fragment">VueJS compatible</li>
+              <li class="fragment">CSS compatible</li>
+              <li class="fragment">Fewer text layout/interactivity support</li>
+              <li class="fragment">Standard tools for graphical editing</li>
+            </ul>
+          </section>
+          <section data-markdown>
+            <textarea data-template>
+                ### (SVG + VueJS) + (HTML + VueJS)
+                ```
+                <svg>
+                  <defs>
+                    <symbol id="breaker-open">...
+                  <g data-id="234567_BREAKER_1" is="electrical-component" 
+                     v-on:child-click="popup" data-details="breaker">
+                    <g slot-scope="{ tag }">
+                      <use xlink:href="#breaker-closed" 
+                           v-if="tag('breaker_status') === 'closed'">...
+                  <g data-id="1356097218_PA_1" is="electrical-component">
+                      <g slot-scope="{ tag }">
+                        <text><tspan alignment-baseline="central">
+                          {{ tag('P_ac_tot')/1000 }} kW
+                ```
+                breaker-popup.html:
+                ```
+                  <template slot="header">{{ tag('caption') }}</template>
+                  <template slot="body">
+                    <button v-if="tag('breaker_status') === 'open'"
+                            @click="commit('close_breaker')">
+                      Close Breaker
+                        ...
+                ```
+            </textarea>
+          </section>
+        </section>
+        <section>
+          <h2>Workflow</h2>
+          
+<svg viewBox="0 0 312 186" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+  <desc>Created with Sketch.</desc>
+  <defs></defs>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="Group-4" transform="translate(0.000000, 1.000000)">
+          <text id="M4E-Generator" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+              <tspan x="8.3996582" y="64">M4E Generator</tspan>
+          </text>
+          <text id="Neo4J" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+              <tspan x="30.1015625" y="25">Neo4J</tspan>
+          </text>
+          <path d="M26.4878049,25 C26.4878049,27.7614237 35.2237122,30 46,30 C56.7762878,30 65.5121951,27.7614237 65.5121951,25 M46,10 C35.2237122,10 26.4878049,7.76142375 26.4878049,5 C26.4878049,2.23857625 35.2237122,0 46,0 C56.7762878,0 65.5121951,2.23857625 65.5121951,5 C65.5121951,7.76142375 56.7762878,10 46,10 Z M65.5121951,25.25 L65.5121951,4.75 L65.5121951,25.25 Z M26.4878049,25 L26.4878049,5 L26.4878049,25 Z" id="Oval" stroke="#FFFFFF"></path>
+          <path d="M25.4878049,149 C25.4878049,154.522847 34.2237122,159 45,159 C55.7762878,159 64.5121951,154.522847 64.5121951,149 M45,119 C34.2237122,119 25.4878049,114.522847 25.4878049,109 C25.4878049,103.477153 34.2237122,99 45,99 C55.7762878,99 64.5121951,103.477153 64.5121951,109 C64.5121951,114.522847 55.7762878,119 45,119 Z M64.5121951,149.5 L64.5121951,108.5 L64.5121951,149.5 Z M25.4878049,149 L25.4878049,109 L25.4878049,149 Z" id="Oval-Copy-2" stroke="#FFFFFF"></path>
+          <rect id="Rectangle" stroke="#FFFFFF" x="0.5" y="48.5" width="90" height="26"></rect>
+          <g id="Group-2" transform="translate(149.000000, 134.000000)">
+              <text id="External-SVG-Editor" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+                  <tspan x="32.284668" y="12">External SVG Editor</tspan>
+              </text>
+              <rect id="Rectangle-2" stroke="#FFFFFF" x="0.5" y="0.5" width="162" height="17"></rect>
+          </g>
+          <g id="Group-3" transform="translate(149.000000, 167.000000)">
+              <text id="Code-Editor" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+                  <tspan x="47.4558105" y="12">Code Editor</tspan>
+              </text>
+              <rect id="Rectangle-2-Copy-2" stroke="#FFFFFF" x="0.5" y="0.5" width="162" height="17"></rect>
+          </g>
+          <g id="Group-3-Copy" transform="translate(149.000000, 167.000000)">
+              <text id="Code-Editor" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+                  <tspan x="47.4558105" y="12">Code Editor</tspan>
+              </text>
+              <rect id="Rectangle-2-Copy-2" stroke="#FFFFFF" x="0.5" y="0.5" width="162" height="17"></rect>
+          </g>
+          <g id="Group" transform="translate(149.000000, 76.000000)">
+              <text id="M4E-SLD-Editor" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+                  <tspan x="42.0681152" y="16">M4E SLD Editor</tspan>
+              </text>
+              <text id="(graphical-and-textu" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+                  <tspan x="13.2097168" y="29">(graphical and textual inline)</tspan>
+              </text>
+              <rect id="Rectangle-2-Copy" stroke="#FFFFFF" x="0.5" y="0.5" width="162" height="37"></rect>
+          </g>
+          <path d="M46.5,30.5 L46.5,47.5" id="Line" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-decoration-1" d="M46.5,47.5 L49.5,36.7 L43.5,36.7 L46.5,47.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M33.5,75.5 L33.5,108.5" id="Line-Copy" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-decoration-1" d="M33.5,108.5 L36.5,97.7 L30.5,97.7 L33.5,108.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M54,108.5 L54,76.5" id="Line-Copy-2" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-2-decoration-1" d="M54,76.5 L51,87.3 L57,87.3 L54,76.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M148.5,96.5 L65.5,121.5" id="Line-Copy-3" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-3-decoration-1" d="M65.5,121.5 L76.7063067,121.257739 L74.9758702,115.51269 L65.5,121.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M65.5,115.5 L147.5,90.5" id="Line-Copy-4" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-4-decoration-1" d="M147.5,90.5 L136.294572,90.7799607 L138.044326,96.5191557 L147.5,90.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M65.5,129.5 L147.5,139.5" id="Line-Copy-5" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-5-decoration-1" d="M147.5,139.5 L137.142588,135.214675 L136.416261,141.17055 L147.5,139.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M65.5,140.5 L148.5,172.5" id="Line-Copy-7" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-7-decoration-1" d="M148.5,172.5 L139.502197,165.815725 L137.343803,171.414058 L148.5,172.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M147.5,178.5 L64.5,146.5" id="Line-Copy-8" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-8-decoration-1" d="M64.5,146.5 L73.4978033,153.184275 L75.656197,147.585942 L64.5,146.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path d="M149.5,145.5 L65.5,134.5" id="Line-Copy-6" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <path id="Line-Copy-6-decoration-1" d="M65.5,134.5 L75.8190408,138.876916 L76.5981036,132.92771 L65.5,134.5 Z" stroke="#FFFFFF" fill="#FFFFFF" stroke-linecap="square"></path>
+          <text id="HTML" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+              <tspan x="31.0280762" y="132">HTML</tspan>
+          </text>
+          <text id="SVG" font-family="Helvetica" font-size="11" font-weight="normal" fill="#FFFFFF">
+              <tspan x="32.3850098" y="145">SVG</tspan>
+          </text>
+      </g>
+  </g>
+</svg>
+        </section>
+        <section>
+          <h2>Open issues</h2>
+          <ul>
+            <li class="fragment">Real dynamic loading of SLDs</li>
+            <li class="fragment">How much editing do we provide</li>
+            <li class="fragment">Security issues</li>
+            <li class="fragment">Testability</li>
+            <li class="fragment">Versioning</li>
+          </ul>
+        </section>
+        <section><h2>Demo</h2></section>
+			</div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/marked.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/markdown.min.js"></script>
+    <script>
+			Reveal.initialize({ dependencies: [
+        {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/highlight/highlight.min.js',
+          async: true,
+          callback: function () { hljs.initHighlightingOnLoad() }
+        }
+      ] });
+		</script>
+	</body>
+</html> 
